@@ -20,6 +20,15 @@ struct inst_t {
     unsigned imm5:5;
     unsigned imm16:16;
     unsigned target:26;
+    static uint32_t getOp(uint32_t inst) { return inst>>26; }
+    static uint32_t getRs(uint32_t inst) { return (inst >> 21) & 0x1f; }
+    static uint32_t getRt(uint32_t inst) { return (inst >> 16) & 0x1f; }
+    static uint32_t getRd(uint32_t inst) { return (inst >> 11) & 0x1f; }
+    static uint32_t getRe(uint32_t inst) { return (inst >>  6) & 0x1f; }
+    static uint32_t getFunc(uint32_t inst) { return inst & 0x3f; }
+    static uint32_t getImm5(uint32_t inst) { return (inst >>  6) & 0x1f; }
+    static uint32_t getImm16(uint32_t inst) { return inst & 0xffff; }
+    static uint32_t getTarget(uint32_t inst) { return inst & 0x3f'fffff; }
 };
 
 static const std::string instFormat[] {
@@ -74,6 +83,93 @@ static const std::string cond[] {
     "BLTZ",   "BGEZ",   "BLTZ", "BGEZ", "BLTZ", "BGEZ", "BLTZ", "BGEZ", 
     "BLTZAL", "BGEZAL", "BLTZ", "BGEZ", "BLTZ", "BGEZ", "BLTZ", "BGEZ", 
     "BLTZ",   "BGEZ",   "BLTZ", "BGEZ", "BLTZ", "BGEZ", "BLTZ", "BGEZ"
+}
+
+std::string decodeBranch(uint32_t inst) {
+    switch(inst_t::getRt(inst)) {
+    }
+}
+
+
+std::string decodeAlu(uint32_t inst) {
+    switch(inst_t::getFunc(inst)) {
+        case 0:
+        case 2:
+        case 3:
+        case 4:
+        case 6:
+        case 7:
+        case 8: 
+        case 9: 
+        case 12: 
+        case 13:
+        case 16: 
+        case 17: 
+        case 18: 
+        case 19:
+        case 24: 
+        case 25: 
+        case 26: 
+        case 27:
+        case 32: 
+        case 33: 
+        case 34: 
+        case 35: 
+        case 36: 
+        case 37: 
+        case 38: 
+        case 39:
+        case 42: 
+        case 43:
+        default:
+            return "N/A"
+    }
+}
+
+std::string decode(uint32_t inst) {
+    switch(inst_t::getOp(inst)) {
+        case 0: return decodeAlu(inst);
+        case 1: return decodeBranch(inst);
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+        case 11:
+        case 12:
+        case 13:
+        case 14:
+        case 15:
+        case 16:
+        case 17:
+        case 18:
+        case 19:
+        case 32:
+        case 33:
+        case 34:
+        case 35:
+        case 36:
+        case 37:
+        case 38:
+        case 40:
+        case 41:
+        case 42:
+        case 43:
+        case 46:
+        case 48:
+        case 49:
+        case 50:
+        case 51:
+        case 56:
+        case 57:
+        case 58:
+        case 59:
+        default: return "N/A";
+    }
 }
 
 int main(int argc, char *argv[]) {
