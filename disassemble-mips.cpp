@@ -44,86 +44,87 @@ static const std::string instFormat[] {
 };
 
 static const std::string regName[] {
-    "zero", "at", "v0", "v1",
-    "a0", "a1", "a2", "a3",
-    "t0", "t1", "t2", "t3",
-    "t4", "t5", "t6", "t7",
-    "s0", "s1", "s2", "s3",
-    "s4", "s5", "s6", "s7",
-    "t8", "t9", "k0", "k1",
-    "gp", "sp", "fp", "ra"
+    "$zero", "$at", "$v0", "$v1",
+    "$a0", "$a1", "$a2", "$a3",
+    "$t0", "$t1", "$t2", "$t3",
+    "$t4", "$t5", "$t6", "$t7",
+    "$s0", "$s1", "$s2", "$s3",
+    "$s4", "$s5", "$s6", "$s7",
+    "$t8", "$t9", "$k0", "$k1",
+    "$gp", "$sp", "$fp", "$ra"
 };
 
 static const std::string opcode[] {
-    "SPECIAL", "BcondZ", "J",    "JAL",   "BEQ",  "BNE", "BLEZ", "BGTZ",
-    "ADDI",    "ADDIU",  "SLTI", "SLTIU", "ANDI", "ORI", "XORI", "LUI",
-    "COP0",    "COP1",   "COP2", "COP3",  "N/A",  "N/A", "N/A",  "N/A",
-    "N/A",     "N/A",    "N/A",  "N/A",   "N/A",  "N/A", "N/A",  "N/A",
-    "LB",      "LH",     "LWL",  "LW",    "LBU",  "LHU", "LWR",  "N/A",
-    "SB",      "SH",     "SWL",  "SW",    "N/A",  "N/A", "SWR",  "N/A",
-    "LWC0",    "LWC1",   "LWC2", "LWC3",  "N/A",  "N/A", "N/A",  "N/A",
-    "SWC0",    "SWC1",   "SWC2", "SWC3",  "N/A",  "N/A", "N/A",  "N/A"
+    "special", "bCONDz", "j",    "jal",   "beq",  "bne", "blez", "bgtz",
+    "addi",    "addiu",  "slti", "sltiu", "andi", "ori", "xori", "lui",
+    "cop0",    "cop1",   "cop2", "cop3",  "n/a",  "n/a", "n/a",  "n/a",
+    "n/a",     "n/a",    "n/a",  "n/a",   "n/a",  "n/a", "n/a",  "n/a",
+    "lb",      "lh",     "lwl",  "lw",    "lbu",  "lhu", "lwr",  "n/a",
+    "sb",      "sh",     "swl",  "sw",    "n/a",  "n/a", "swr",  "n/a",
+    "lwc0",    "lwc1",   "lwc2", "lwc3",  "n/a",  "n/a", "n/a",  "n/a",
+    "swc0",    "swc1",   "swc2", "swc3",  "n/a",  "n/a", "n/a",  "n/a"
 };
 
 // SPECIAL table
 static const std::string func[] {
-    "SLL",  "N/A",   "SRL",  "SRA",  "SLLV",    "N/A",   "SRLV", "SRAV",
-    "JR",   "JALR",  "N/A",  "N/A",  "SYSCALL", "BREAK", "N/A",  "N/A",
-    "MFHI", "MTHI",  "MFLO", "MTLO", "N/A",     "N/A",   "N/A",  "N/A",
-    "MULT", "MULTU", "DIV",  "DIVU", "N/A",     "N/A",   "N/A",  "N/A",
-    "ADD",  "ADDU",  "SUB",  "SUBU", "AND",     "OR",    "XOR",  "NOR",
-    "N/A",  "N/A",   "SLT",  "SLTU", "N/A",     "N/A",   "N/A",  "N/A",
-    "N/A",  "N/A",   "N/A",  "N/A",  "N/A",     "N/A",   "N/A",  "N/A"
-    "N/A",  "N/A",   "N/A",  "N/A",  "N/A",     "N/A",   "N/A",  "N/A"
+    "sll",  "n/a",   "srl",  "sra",  "sllv",    "n/a",   "srlv", "srav",
+    "jr",   "jalr",  "n/a",  "n/a",  "syscall", "break", "n/a",  "n/a",
+    "mfhi", "mthi",  "mflo", "mtlo", "n/a",     "n/a",   "n/a",  "n/a",
+    "mult", "multu", "div",  "divu", "n/a",     "n/a",   "n/a",  "n/a",
+    "add",  "addu",  "sub",  "subu", "and",     "or",    "xor",  "nor",
+    "n/a",  "n/a",   "slt",  "sltu", "n/a",     "n/a",   "n/a",  "n/a",
+    "n/a",  "n/a",   "n/a",  "n/a",  "n/a",     "n/a",   "n/a",  "n/a"
+    "n/a",  "n/a",   "n/a",  "n/a",  "n/a",     "n/a",   "n/a",  "n/a"
 };
 
 // BcondZ table
 static const std::string cond[] {
-    "BLTZ",   "BGEZ",   "BLTZ", "BGEZ", "BLTZ", "BGEZ", "BLTZ", "BGEZ", 
-    "BLTZ",   "BGEZ",   "BLTZ", "BGEZ", "BLTZ", "BGEZ", "BLTZ", "BGEZ", 
-    "BLTZAL", "BGEZAL", "BLTZ", "BGEZ", "BLTZ", "BGEZ", "BLTZ", "BGEZ", 
-    "BLTZ",   "BGEZ",   "BLTZ", "BGEZ", "BLTZ", "BGEZ", "BLTZ", "BGEZ"
-}
+    "bltz",   "bgez",   "bltz", "bgez", "bltz", "bgez", "bltz", "bgez", 
+    "bltz",   "bgez",   "bltz", "bgez", "bltz", "bgez", "bltz", "bgez", 
+    "bltzal", "bgezal", "bltz", "bgez", "bltz", "bgez", "bltz", "bgez", 
+    "bltz",   "bgez",   "bltz", "bgez", "bltz", "bgez", "bltz", "bgez"
+};
 
 std::string decodeBranch(uint32_t inst) {
-    switch(inst_t::getRt(inst)) {
-    }
+    return cond[inst_t::getRt(inst)] + " " + regName[inst_t::getRs(inst)] + ", " + std::to_string(int(inst_t::getImm16(inst)));
 }
 
+/*
+  000000 | N/A  | rt   | rd   | imm5 | 0000xx | shift-imm    0,2,3   SLL, SRL, SRA
+  000000 | rs   | rt   | rd   | N/A  | 0001xx | shift-reg    4,6,7   SLLV, SRLV, SRAV
+  000000 | rs   | N/A  | N/A  | N/A  | 001000 | jr           8
+  000000 | rs   | N/A  | rd   | N/A  | 001001 | jalr         9
+  000000 | <-----comment20bit------> | 00110x | sys/brk      12,13
+  000000 | N/A  | N/A  | rd   | N/A  | 0100x0 | mfhi/mflo    16, 18
+  000000 | rs   | N/A  | N/A  | N/A  | 0100x1 | mthi/mtlo    17, 19
+  000000 | rs   | rt   | N/A  | N/A  | 0110xx | mul/div      24,25,26,27
+  000000 | rs   | rt   | rd   | N/A  | 10xxxx | alu-reg      32,33,34,35,36,37,38,39,42,43
+*/
 
 std::string decodeAlu(uint32_t inst) {
     switch(inst_t::getFunc(inst)) {
-        case 0:
-        case 2:
-        case 3:
-        case 4:
-        case 6:
-        case 7:
+        case 0: case 2: case 3:
+            break;
+        case 4: case 6: case 7:
+            break;
         case 8: 
+            break;
         case 9: 
-        case 12: 
-        case 13:
-        case 16: 
-        case 17: 
-        case 18: 
-        case 19:
-        case 24: 
-        case 25: 
-        case 26: 
-        case 27:
-        case 32: 
-        case 33: 
-        case 34: 
-        case 35: 
-        case 36: 
-        case 37: 
-        case 38: 
-        case 39:
-        case 42: 
-        case 43:
+            break;
+        case 12: case 13:
+            break;
+        case 16: case 18:
+            break;
+        case 17: case 19:
+            break;
+        case 24: case 25: case 26: case 27:
+            break;
+        case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 39: case 42: case 43:
+            break;
         default:
-            return "N/A"
+            return "N/A";
     }
+    return func[inst_t::getFunc(inst)];
 }
 
 std::string decode(uint32_t inst) {
@@ -167,7 +168,7 @@ std::string decode(uint32_t inst) {
         case 56:
         case 57:
         case 58:
-        case 59:
+        case 59: return opcode[inst_t::getOp(inst)];
         default: return "N/A";
     }
 }
@@ -190,13 +191,15 @@ int main(int argc, char *argv[]) {
     std::vector<uint32_t> data;
     infile.seekg(0,std::ios::end);
     size_t fileSize = infile.tellg();
-    data.resize(fileSize);
+    std::cout<<"Reading "<<fileSize<<" bytes from "<<args[1]<<'\n';
+    data.resize(fileSize / 4 + fileSize % 4);
     infile.seekg(0,std::ios::beg);
     infile.read(reinterpret_cast<char*>(data.data()), fileSize);
 
     size_t offset = 0;
     for(auto d:data) {
-        std::printf("%06x: %08x\n", offset, d);
+        std::printf("%06x: %08x\t", offset, d);
+        std::cout<<decode(d)<<'\n';
         offset += 4;
     }
 
