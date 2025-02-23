@@ -10,6 +10,7 @@ enum format_t {
     jmp
 };
 
+using str = std::string;
 struct inst_t {
     unsigned op:6;
     unsigned func:6;
@@ -27,8 +28,8 @@ struct inst_t {
     static uint32_t getRe(uint32_t inst) { return (inst >>  6) & 0x1f; }
     static uint32_t getFunc(uint32_t inst) { return inst & 0x3f; }
     static uint32_t getImm5(uint32_t inst) { return (inst >>  6) & 0x1f; }
-    static uint32_t getImm16(uint32_t inst) { return inst & 0xffff; }
-    static uint32_t getTarget(uint32_t inst) { return inst & 0x3f'fffff; }
+    static int16_t getImm16(uint32_t inst) { return inst & 0xffff; }
+    static uint32_t getTarget(uint32_t inst) { return inst & 0x3ff'ffff; }
 };
 
 static const std::string instFormat[] {
@@ -85,8 +86,13 @@ static const std::string cond[] {
     "bltz",   "bgez",   "bltz", "bgez", "bltz", "bgez", "bltz", "bgez"
 };
 
+static const str sp = " ";
+static const str csp = ", ";
+static const str op = "(";
+static const str cp = ")";
+
 std::string decodeBranch(uint32_t inst) {
-    return cond[inst_t::getRt(inst)] + " " + regName[inst_t::getRs(inst)] + ", " + std::to_string(int(inst_t::getImm16(inst)));
+    return cond[inst_t::getRt(inst)] + sp + regName[inst_t::getRs(inst)] + csp + std::to_string(inst_t::getImm16(inst));
 }
 
 /*
@@ -120,7 +126,7 @@ std::string decodeAlu(uint32_t inst) {
         case 24: case 25: case 26: case 27:
             break;
         case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 39: case 42: case 43:
-            break;
+            return func[inst_t::getFunc(inst)] + sp + regName[inst_t::getRd(inst)] + csp + regName[inst_t::getRs(inst)] + csp + regName[inst_t::getRt(inst)];
         default:
             return "N/A";
     }
@@ -128,39 +134,24 @@ std::string decodeAlu(uint32_t inst) {
 }
 
 std::string decode(uint32_t inst) {
-    switch(inst_t::getOp(inst)) {
-        case 0: return decodeAlu(inst);
-        case 1: return decodeBranch(inst);
+    auto oper = inst_t::getOp(inst);
+    switch(oper) {
+        case 0: return decodeAlu(inst); // ALU operations
+        case 1: return decodeBranch(inst); // Branch operations
         case 2:
         case 3:
         case 4:
         case 5:
         case 6:
         case 7:
-        case 8:
-        case 9:
-        case 10:
-        case 11:
-        case 12:
-        case 13:
-        case 14:
-        case 15:
+        case 8: case 9: case 10: case 11: case 12: case 13: case 14: case 15: // I-Type ALU ops
+            return opcode[oper] + sp + regName[inst_t::getRt(inst)] + csp + regName[inst_t::getRs(inst)] + "csp" + std::to_string(inst_t::getImm16(inst));
         case 16:
         case 17:
         case 18:
         case 19:
-        case 32:
-        case 33:
-        case 34:
-        case 35:
-        case 36:
-        case 37:
-        case 38:
-        case 40:
-        case 41:
-        case 42:
-        case 43:
-        case 46:
+        case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 40: case 41: case 42: case 43: case 46: // load/store ops
+            return opcode[oper] + sp + regName[inst_t::getRt(inst)] + csp + std::to_string(inst_t::getImm16(inst)) + op + regName[inst_t::getRs(inst)] + cp;
         case 48:
         case 49:
         case 50:
