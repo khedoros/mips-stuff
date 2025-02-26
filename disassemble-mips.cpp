@@ -29,7 +29,7 @@ struct inst_t {
     static uint32_t getFunc(uint32_t inst) { return inst & 0x3f; }
     static uint32_t getImm5(uint32_t inst) { return (inst >>  6) & 0x1f; }
     static int16_t getImm16(uint32_t inst) { return inst & 0xffff; }
-    static uint32_t getTarget(uint32_t inst) { return inst & 0x3ff'ffff; }
+    static uint32_t getTarget(uint32_t inst) { return 4*(inst & 0x3ff'ffff); }
 };
 
 static const std::string instFormat[] {
@@ -109,22 +109,23 @@ std::string decodeBranch(uint32_t inst) {
 
 std::string decodeAlu(uint32_t inst) {
     switch(inst_t::getFunc(inst)) {
-        case 0: case 2: case 3:
-            break;
+        case 0: case 2: case 3: 
+            if(inst == 0) return "nop";
+            return func[inst_t::getFunc(inst)] + " meep";
         case 4: case 6: case 7:
-            break;
+            return func[inst_t::getFunc(inst)] + " meep";
         case 8: 
-            break;
+            return func[inst_t::getFunc(inst)] + " meep";
         case 9: 
-            break;
+            return func[inst_t::getFunc(inst)] + " meep";
         case 12: case 13:
-            break;
+            return func[inst_t::getFunc(inst)] + " meep";
         case 16: case 18:
-            break;
+            return func[inst_t::getFunc(inst)] + " meep";
         case 17: case 19:
-            break;
+            return func[inst_t::getFunc(inst)] + " meep";
         case 24: case 25: case 26: case 27:
-            break;
+            return func[inst_t::getFunc(inst)] + " meep";
         case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 39: case 42: case 43:
             return func[inst_t::getFunc(inst)] + sp + regName[inst_t::getRd(inst)] + csp + regName[inst_t::getRs(inst)] + csp + regName[inst_t::getRt(inst)];
         default:
@@ -138,28 +139,46 @@ std::string decode(uint32_t inst) {
     switch(oper) {
         case 0: return decodeAlu(inst); // ALU operations
         case 1: return decodeBranch(inst); // Branch operations
-        case 2:
-        case 3:
+        case 2: case 3: // j/jal
+            return opcode[oper] + sp + std::to_string(inst_t::getTarget(inst));
         case 4:
+            return opcode[inst_t::getOp(inst)] + " meep";
         case 5:
+            return opcode[inst_t::getOp(inst)] + " meep";
         case 6:
+            return opcode[inst_t::getOp(inst)] + " meep";
         case 7:
-        case 8: case 9: case 10: case 11: case 12: case 13: case 14: case 15: // I-Type ALU ops
-            return opcode[oper] + sp + regName[inst_t::getRt(inst)] + csp + regName[inst_t::getRs(inst)] + "csp" + std::to_string(inst_t::getImm16(inst));
+            return opcode[inst_t::getOp(inst)] + " meep";
+        case 8: case 9: case 10: case 11: case 12: case 13: case 14: // I-Type ALU ops
+            return opcode[oper] + sp + regName[inst_t::getRt(inst)] + csp + regName[inst_t::getRs(inst)] + csp + std::to_string(inst_t::getImm16(inst));
+        case 15: // lui
+            return opcode[oper] + sp + regName[inst_t::getRt(inst)] + csp + std::to_string(inst_t::getImm16(inst));
         case 16:
+            return opcode[inst_t::getOp(inst)] + " meep";
         case 17:
+            return opcode[inst_t::getOp(inst)] + " meep";
         case 18:
+            return opcode[inst_t::getOp(inst)] + " meep";
         case 19:
+            return opcode[inst_t::getOp(inst)] + " meep";
         case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 40: case 41: case 42: case 43: case 46: // load/store ops
             return opcode[oper] + sp + regName[inst_t::getRt(inst)] + csp + std::to_string(inst_t::getImm16(inst)) + op + regName[inst_t::getRs(inst)] + cp;
         case 48:
+            return opcode[inst_t::getOp(inst)] + " meep";
         case 49:
+            return opcode[inst_t::getOp(inst)] + " meep";
         case 50:
+            return opcode[inst_t::getOp(inst)] + " meep";
         case 51:
+            return opcode[inst_t::getOp(inst)] + " meep";
         case 56:
+            return opcode[inst_t::getOp(inst)] + " meep";
         case 57:
+            return opcode[inst_t::getOp(inst)] + " meep";
         case 58:
-        case 59: return opcode[inst_t::getOp(inst)];
+            return opcode[inst_t::getOp(inst)] + " meep";
+        case 59:
+            return opcode[inst_t::getOp(inst)] + " meep";
         default: return "N/A";
     }
 }
