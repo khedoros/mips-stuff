@@ -109,15 +109,15 @@ std::string decodeBranch(uint32_t inst) {
 
 std::string decodeAlu(uint32_t inst) {
     switch(inst_t::getFunc(inst)) {
-        case 0: case 2: case 3: 
+        case 0: case 2: case 3: // SLL SRL SRA
             if(inst == 0) return "nop";
-            return func[inst_t::getFunc(inst)] + " meep";
-        case 4: case 6: case 7:
-            return func[inst_t::getFunc(inst)] + " meep";
-        case 8: 
-            return func[inst_t::getFunc(inst)] + " meep";
-        case 9: 
-            return func[inst_t::getFunc(inst)] + " meep";
+            return func[inst_t::getFunc(inst)] + sp + regName[inst_t::getRd(inst)] + csp + regName[inst_t::getRt(inst)] + csp + std::to_string(inst_t::getImm5(inst));
+        case 4: case 6: case 7: // SLLV SRLV SRAV
+            return func[inst_t::getFunc(inst)] + sp + regName[inst_t::getRd(inst)] + csp + regName[inst_t::getRt(inst)] + csp + regName[inst_t::getRs(inst)];
+        case 8: // JR
+            return func[inst_t::getFunc(inst)] + sp + regName[inst_t::getRs(inst)];
+        case 9: // JALR
+            return func[inst_t::getFunc(inst)] + sp + regName[inst_t::getRd(inst)] + csp + regName[inst_t::getRs(inst)];
         case 12: case 13:
             return func[inst_t::getFunc(inst)] + " meep";
         case 16: case 18:
