@@ -95,18 +95,6 @@ std::string decodeBranch(uint32_t inst) {
     return cond[inst_t::getRt(inst)] + sp + regName[inst_t::getRs(inst)] + csp + std::to_string(inst_t::getImm16(inst));
 }
 
-/*
-  000000 | N/A  | rt   | rd   | imm5 | 0000xx | shift-imm    0,2,3   SLL, SRL, SRA
-  000000 | rs   | rt   | rd   | N/A  | 0001xx | shift-reg    4,6,7   SLLV, SRLV, SRAV
-  000000 | rs   | N/A  | N/A  | N/A  | 001000 | jr           8
-  000000 | rs   | N/A  | rd   | N/A  | 001001 | jalr         9
-  000000 | <-----comment20bit------> | 00110x | sys/brk      12,13
-  000000 | N/A  | N/A  | rd   | N/A  | 0100x0 | mfhi/mflo    16, 18
-  000000 | rs   | N/A  | N/A  | N/A  | 0100x1 | mthi/mtlo    17, 19
-  000000 | rs   | rt   | N/A  | N/A  | 0110xx | mul/div      24,25,26,27
-  000000 | rs   | rt   | rd   | N/A  | 10xxxx | alu-reg      32,33,34,35,36,37,38,39,42,43
-*/
-
 std::string decodeAlu(uint32_t inst) {
     switch(inst_t::getFunc(inst)) {
         case 0: case 2: case 3: // SLL SRL SRA
@@ -119,13 +107,13 @@ std::string decodeAlu(uint32_t inst) {
         case 9: // JALR
             return func[inst_t::getFunc(inst)] + sp + regName[inst_t::getRd(inst)] + csp + regName[inst_t::getRs(inst)];
         case 12: case 13:
-            return func[inst_t::getFunc(inst)] + " meep";
+            return func[inst_t::getFunc(inst)] + sp + std::to_string(inst>>6); // top 6 bits are 0, next 20 bits are a "comment" value
         case 16: case 18:
-            return func[inst_t::getFunc(inst)] + " meep";
+            return func[inst_t::getFunc(inst)] + sp + regName[inst_t::getRd(inst)];
         case 17: case 19:
-            return func[inst_t::getFunc(inst)] + " meep";
+            return func[inst_t::getFunc(inst)] + sp + regName[inst_t::getRs(inst)];
         case 24: case 25: case 26: case 27:
-            return func[inst_t::getFunc(inst)] + " meep";
+            return func[inst_t::getFunc(inst)] + sp + regName[inst_t::getRs(inst)] + csp + regName[inst_t::getRt(inst)];
         case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 39: case 42: case 43:
             return func[inst_t::getFunc(inst)] + sp + regName[inst_t::getRd(inst)] + csp + regName[inst_t::getRs(inst)] + csp + regName[inst_t::getRt(inst)];
         default:
