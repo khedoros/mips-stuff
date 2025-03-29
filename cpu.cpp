@@ -18,64 +18,100 @@ cpu::cycleCount cpu::execute(uint32_t inst) {
     switch(oper) {
         case 0: return executeAlu(inst); // ALU operations
         case 1: return executeBranch(inst); // Branch operations
-        case 2: case 3: // j/jal
+        case 2: // j
+            return 0;
+        case 3: // jal
             return 0;
             // return opcode[oper] + sp + std::to_string(inst_t::getTarget(inst));
-        case 4:
+        case 4: // beq
             return 0;
             // return opcode[inst_t::getOp(inst)] + " meep";
-        case 5:
+        case 5: // bne
             return 0;
             // return opcode[inst_t::getOp(inst)] + " meep";
-        case 6:
+        case 6: // blez
             return 0;
             // return opcode[inst_t::getOp(inst)] + " meep";
-        case 7:
+        case 7: // bgtz
             return 0;
             // return opcode[inst_t::getOp(inst)] + " meep";
-        case 8: case 9: case 10: case 11: case 12: case 13: case 14: // I-Type ALU ops
+        case 8: // addi
+            return 0;
+        case 9: // addiu
+            return 0;
+        case 0xa: // slti
+            return 0;
+        case 0xb: // sltiu
+            return 0;
+        case 0xc: // andi
+            return 0;
+        case 0xd: // ori
+            return 0;
+        case 0xe: // xori
             return 0;
             // return opcode[oper] + sp + regName[inst_t::getRt(inst)] + csp + regName[inst_t::getRs(inst)] + csp + std::to_string(inst_t::getImm16(inst));
-        case 15: // lui
+        case 0xf: // lui
             return 0;
             // return opcode[oper] + sp + regName[inst_t::getRt(inst)] + csp + std::to_string(inst_t::getImm16(inst));
-        case 16:
+        case 0x10: // cop0
             return 0;
             // return opcode[inst_t::getOp(inst)] + " meep";
-        case 17:
+        case 0x11: // cop1
             return 0;
             //return opcode[inst_t::getOp(inst)] + " meep";
-        case 18:
+        case 0x12: // cop2
             return 0;
             // return opcode[inst_t::getOp(inst)] + " meep";
-        case 19:
+        case 0x13: // cop3
             return 0;
             // return opcode[inst_t::getOp(inst)] + " meep";
-        case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 40: case 41: case 42: case 43: case 46: // load/store ops
+        case 0x20: // lb
+            return 0;
+        case 0x21: // lh
+            return 0;
+        case 0x22: // lwl
+            return 0;
+        case 0x23: // lw
+            return 0;
+        case 0x24: // lbu
+            return 0;
+        case 0x25: // lhu
+            return 0;
+        case 0x26: // lwr
+            return 0;
+        case 0x28: // sb
+            return 0;
+        case 0x29: // sh
+            return 0;
+        case 0x2a: // swl
+            return 0;
+        case 0x2b: // sw
+            return 0;
+        case 0x2e: // swr
             return 0;
             // return opcode[oper] + sp + regName[inst_t::getRt(inst)] + csp + std::to_string(inst_t::getImm16(inst)) + op + regName[inst_t::getRs(inst)] + cp;
-        case 48:
+        case 0x30: // lwc0
             return 0;
             // return opcode[inst_t::getOp(inst)] + " meep";
-        case 49:
+        case 0x31: // lwc1
             return 0;
             // return opcode[inst_t::getOp(inst)] + " meep";
-        case 50:
+        case 0x32: // lwc2
             return 0;
             // return opcode[inst_t::getOp(inst)] + " meep";
-        case 51:
+        case 0x33: // lwc3
             return 0;
             // return opcode[inst_t::getOp(inst)] + " meep";
-        case 56:
+        case 0x38: // swc0
             return 0;
             // return opcode[inst_t::getOp(inst)] + " meep";
-        case 57:
+        case 0x39: // swc1
             return 0;
             // return opcode[inst_t::getOp(inst)] + " meep";
-        case 58:
+        case 0x3a: // swc2
             return 0;
             // return opcode[inst_t::getOp(inst)] + " meep";
-        case 59:
+        case 0x3b: // swc3
             return 0;
             // return opcode[inst_t::getOp(inst)] + " meep";
         default: 
@@ -86,40 +122,65 @@ cpu::cycleCount cpu::execute(uint32_t inst) {
 
 cpu::cycleCount cpu::executeAlu(uint32_t inst) {
     switch(inst_t::getFunc(inst)) {
-        case 0: case 2: case 3: // SLL SRL SRA
-            if(inst == 0) return 0; // "nop";
-            // function: inst_t::getFunc(inst)
-            // destination: inst_t::getRd(inst)
-            // register operator: inst_t::getRt(inst)
-            // rotation constant: inst_t::getImm5(inst)
+        case 0: // sll
             return 0;
-        case 4: case 6: case 7: // SLLV SRLV SRAV
+        case 2: // srl
             return 0;
-            // function: inst_t::getFunc(inst)
-            // destination: inst_t::getRd(inst)
-            // register operator: inst_t::getRt(inst)
-            // rotation register: inst_t::getRs(inst);
-        case 8: // JR
+        case 3: // sra
+            return 0;
+        case 4: // sllv
+            return 0;
+        case 6: // srlv
+            return 0;
+        case 7: // srav
+            return 0;
+        case 8: // jr
             return 0;
             // return func[inst_t::getFunc(inst)] + sp + regName[inst_t::getRs(inst)];
-        case 9: // JALR
+        case 9: // jalr
             return 0;
             // return func[inst_t::getFunc(inst)] + sp + regName[inst_t::getRd(inst)] + csp + regName[inst_t::getRs(inst)];
-        case 12: case 13:
+        case 0xc: // syscall
+            return 0;
+        case 0xd: // break
             return 0;
             // return func[inst_t::getFunc(inst)] + sp + std::to_string(inst>>6); // top 6 bits are 0, next 20 bits are a "comment" value
-        case 16: case 18:
+        case 0x10: // mfhi
             return 0;
-            // return func[inst_t::getFunc(inst)] + sp + regName[inst_t::getRd(inst)];
-        case 17: case 19:
+        case 0x11: // mthi
             return 0;
-            // return func[inst_t::getFunc(inst)] + sp + regName[inst_t::getRs(inst)];
-        case 24: case 25: case 26: case 27:
+        case 0x12: // mflo
             return 0;
-            // return func[inst_t::getFunc(inst)] + sp + regName[inst_t::getRs(inst)] + csp + regName[inst_t::getRt(inst)];
-        case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 39: case 42: case 43:
+        case 0x13: // mtlo
             return 0;
-            // return func[inst_t::getFunc(inst)] + sp + regName[inst_t::getRd(inst)] + csp + regName[inst_t::getRs(inst)] + csp + regName[inst_t::getRt(inst)];
+        case 0x18: // mult
+            return 0;
+        case 0x19: // multu
+            return 0;
+        case 0x1a: // div
+            return 0;
+        case 0x1b: // divu
+            return 0;
+        case 0x20: // add
+            return 0;
+        case 0x21: // addu
+            return 0;
+        case 0x22: // sub
+            return 0;
+        case 0x23: // subu
+            return 0;
+        case 0x24: // and
+            return 0;
+        case 0x25: // or
+            return 0;
+        case 0x26: // xor
+            return 0;
+        case 0x27: // nor
+            return 0;
+        case 0x2a: // slt
+            return 0;
+        case 0x2b: // sltu
+            return 0;
         default:
             return 0;
             // unrecognized/invalid
@@ -130,5 +191,17 @@ cpu::cycleCount cpu::executeBranch(uint32_t inst) {
     // branch type: inst_t::getRt(inst)
     // offset register: inst_t::getRs(inst)
     // 16-bit immediate: inst_t::getImm16(inst);
-    return 0;
+    switch(inst_t::getRt(inst)) {
+        case 0x10:
+            return 0;
+        case 0x11:
+            return 0;
+        default:
+            if(inst_t::getRt(inst) & 1) { // bgezal
+                return 0;
+            }
+            else { // bltzal
+                return 0;
+            }
+    }
 }
