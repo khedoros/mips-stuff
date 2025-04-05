@@ -1,4 +1,4 @@
-#include "memmap.h"
+#include "memmap.hpp"
 
 /*
     KUSEG     KSEG0     KSEG1

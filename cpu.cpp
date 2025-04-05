@@ -8,16 +8,30 @@
 #include "instruction.hpp"
 #include "disassembly.hpp"
 
-cpu::cpu() : cycle{0}, pc{0xbfc00000} {
-
+cpu::cpu(std::unique_ptr<memmap>& memoryMap) : cycle{0}, pc{0xbfc00000}, mem(std::move(memoryMap)) {
+    
 }
 
-cpu::cycleCount cpu::execute(uint32_t inst) {
+cpu::cycleCount cpu::runOne() {
+    pipeline[(pipelineStep + fetch) % pipelineLength] = mem->read32(pc);
+
+    pipeline[(pipelineStep + decode) % pipelineLength];
+
+    pipeline[(pipelineStep + execute) % pipelineLength];
+
+    pipeline[(pipelineStep + memory) % pipelineLength];
+
+    pipeline[(pipelineStep + writeback) % pipelineLength];
+
+    pipelineStep++;
+}
+
+cpu::cycleCount cpu::exec(uint32_t inst) {
     std::cout << ::decode(inst) << '\n';
     auto oper = inst_t::getOp(inst);
     switch(oper) {
-        case 0: return executeAlu(inst); // ALU operations
-        case 1: return executeBranch(inst); // Branch operations
+        case 0: return execAlu(inst); // ALU operations
+        case 1: return execBranch(inst); // Branch operations
         case 2: // j
             return 0;
         case 3: // jal
