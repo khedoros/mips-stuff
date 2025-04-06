@@ -4,6 +4,7 @@
 #include<array>
 #include<memory>
 
+#include "instruction.hpp"
 #include "memmap.hpp"
 
 class cpu {
@@ -24,11 +25,15 @@ private:
         memory,    // access memory operand
         writeback  // write result back to register
     };
-    std::array<uint32_t, 2> fetchInst;
-    std::array<uint32_t, pipelineLength> pipeline;
+    std::array<inst_t, pipelineLength> pipeline;
     cycleCount exec(uint32_t inst);
     cycleCount execBranch(uint32_t inst);
     cycleCount execAlu(uint32_t inst);
+    cycleCount fetchOp(inst_t& i);
+    cycleCount decodeOp(inst_t& i);
+    cycleCount executeOp(inst_t& i);
+    cycleCount memoryOp(inst_t& i);
+    cycleCount writebackOp(inst_t& i);
 
 public:
     cpu(std::unique_ptr<memmap>& memoryMap);

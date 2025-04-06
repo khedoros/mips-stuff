@@ -14,16 +14,15 @@ cpu::cpu(std::unique_ptr<memmap>& memoryMap) : cycle{0}, pc{0xbfc00000}, mem(std
 
 cpu::cycleCount cpu::runOne() {
 
-    fetchInst[0] = mem->read32(pc);
-
+    cycleCount fcc = fetchOp(pipeline[(pipelineStep + fetch) % pipelineLength]);
     
-    pipeline[(pipelineStep + decode) % pipelineLength];
+    cycleCount dcc = decodeOp(pipeline[(pipelineStep + decode) % pipelineLength]);
 
-    pipeline[(pipelineStep + execute) % pipelineLength];
+    cycleCount ecc = executeOp(pipeline[(pipelineStep + execute) % pipelineLength]);
 
-    pipeline[(pipelineStep + memory) % pipelineLength];
+    cycleCount mcc = memoryOp(pipeline[(pipelineStep + memory) % pipelineLength]);
 
-    pipeline[(pipelineStep + writeback) % pipelineLength];
+    cycleCount wcc = writebackOp(pipeline[(pipelineStep + writeback) % pipelineLength]);
 
     pipelineStep++;
 }
