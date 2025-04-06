@@ -13,8 +13,10 @@ cpu::cpu(std::unique_ptr<memmap>& memoryMap) : cycle{0}, pc{0xbfc00000}, mem(std
 }
 
 cpu::cycleCount cpu::runOne() {
-    pipeline[(pipelineStep + fetch) % pipelineLength] = mem->read32(pc);
 
+    fetchInst[0] = mem->read32(pc);
+
+    
     pipeline[(pipelineStep + decode) % pipelineLength];
 
     pipeline[(pipelineStep + execute) % pipelineLength];
@@ -134,7 +136,7 @@ cpu::cycleCount cpu::exec(uint32_t inst) {
     }
 }
 
-cpu::cycleCount cpu::executeAlu(uint32_t inst) {
+cpu::cycleCount cpu::execAlu(uint32_t inst) {
     switch(inst_t::getFunc(inst)) {
         case 0: // sll
             return 0;
@@ -201,7 +203,7 @@ cpu::cycleCount cpu::executeAlu(uint32_t inst) {
     }
 }
 
-cpu::cycleCount cpu::executeBranch(uint32_t inst) {
+cpu::cycleCount cpu::execBranch(uint32_t inst) {
     // branch type: inst_t::getRt(inst)
     // offset register: inst_t::getRs(inst)
     // 16-bit immediate: inst_t::getImm16(inst);
