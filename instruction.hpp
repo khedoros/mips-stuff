@@ -43,8 +43,19 @@
 */
 
 struct inst_t {
+    enum memOp_t {
+        none,
+        read,
+        write
+    };
+    // caches for pipeline steps
     uint32_t opcode; // full 32-bit operation fetched
+    uint32_t operand1; // fetched register value
+    uint32_t operand2; // fetched register value
+    uint32_t address; // calculated address to read from or write to
+    unsigned outputReg; // register to write back to
 
+    // values extracted from the instruction itself
     unsigned op:6; // 0 for r-format, 0x10 and 0x11 for j-format, 
     unsigned func:6; // only used for that purpose in r-format
     unsigned rs:5; // r-format op 1, i-format offset reg
@@ -53,6 +64,13 @@ struct inst_t {
     unsigned imm5:5; // R-format immediate
     unsigned imm16:16; // I-format
     unsigned target:26; // J-format
+
+    // other operation control signals
+    bool valid; // for eventually handling invalid instructions
+    bool regWB; // register writeback
+    bool jump; // for operations that branch/jump
+    memOp_t memOpType; // memory operation to perform
+
     static uint32_t getOp(uint32_t inst) { return inst>>26; }
     static uint32_t getFunc(uint32_t inst) { return inst & 0x3f; }
     static uint32_t getRs(uint32_t inst) { return (inst >> 21) & 0x1f; }
