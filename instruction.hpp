@@ -71,12 +71,25 @@ struct inst_t {
     bool jump; // for operations that branch/jump
     memOp_t memOpType; // memory operation to perform
 
-    static uint32_t getOp(uint32_t inst) { return inst>>26; }
-    static uint32_t getFunc(uint32_t inst) { return inst & 0x3f; }
-    static uint32_t getRs(uint32_t inst) { return (inst >> 21) & 0x1f; }
-    static uint32_t getRt(uint32_t inst) { return (inst >> 16) & 0x1f; }
-    static uint32_t getRd(uint32_t inst) { return (inst >> 11) & 0x1f; }
-    static uint32_t getImm5(uint32_t inst) { return (inst >>  6) & 0x1f; }
-    static int16_t getImm16(uint32_t inst) { return inst & 0xffff; }
-    static uint32_t getTarget(uint32_t inst) { return 4*(inst & 0x3ff'ffff); }
+    void setOp() { op = opcode >> 26; }
+    void setFunc() { func = opcode & 0x3f; }
+    void setRs() { rs = (opcode >> 21) & 0x1f; }
+    void setRt() { rt = (opcode >> 16) & 0x1f; }
+    void setRd() { rd = (opcode >> 11) & 0x1f; }
+    void setImm5() { imm5 = (opcode >>  6) & 0x1f; }
+    void setImm16() { imm16 = opcode & 0xffff; }
+    void setTarget() { target = 4*(opcode & 0x3ff'ffff); }
+
+    static uint32_t getOp(uint32_t inst);
+    static uint32_t getFunc(uint32_t inst);
+    static uint32_t getRs(uint32_t inst);
+    static uint32_t getRt(uint32_t inst);
+    static uint32_t getRd(uint32_t inst);
+    static uint32_t getImm5(uint32_t inst);
+    static int16_t getImm16(uint32_t inst);
+    static uint32_t getTarget(uint32_t inst);
 };
+
+namespace inst {
+
+}

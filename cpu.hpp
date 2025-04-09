@@ -29,11 +29,11 @@ private:
     cycleCount exec(uint32_t inst);
     cycleCount execBranch(uint32_t inst);
     cycleCount execAlu(uint32_t inst);
-    cycleCount fetchOp(inst_t& i);
-    cycleCount decodeOp(inst_t& i);
-    cycleCount executeOp(inst_t& i);
-    cycleCount memoryOp(inst_t& i);
-    cycleCount writebackOp(inst_t& i);
+    cycleCount fetchOp(inst_t& inst);
+    cycleCount decodeOp(inst_t& inst);
+    cycleCount executeOp(inst_t& inst);
+    cycleCount memoryOp(inst_t& inst);
+    cycleCount writebackOp(inst_t& inst);
 
 public:
     cpu(std::unique_ptr<memmap>& memoryMap);

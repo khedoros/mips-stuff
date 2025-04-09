@@ -1,3 +1,4 @@
+#include<algorithm>
 #include<iostream>
 #include<fstream>
 #include<vector>
@@ -5,6 +6,7 @@
 #include<cstdint>
 
 #include "cpu.hpp"
+#include "memmap.hpp"
 #include "instruction.hpp"
 #include "disassembly.hpp"
 
@@ -25,6 +27,27 @@ cpu::cycleCount cpu::runOne() {
     cycleCount wcc = writebackOp(pipeline[(pipelineStep + writeback) % pipelineLength]);
 
     pipelineStep++;
+    pipelineStep %= 5;
+
+    return std::max({fcc,dcc,ecc,mcc,wcc});
+}
+
+cpu::cycleCount cpu::fetchOp(inst_t& inst) {
+    inst.opcode = mem->read32(pc);
+    inst.valid = false;
+    inst.regWB = false;
+    inst.jump = false;
+    inst.memOpType = inst_t::none;
+    return 1;
+}
+
+cpu::cycleCount cpu::decodeOp(inst_t& inst) {
+    inst.setOp();
+    if(inst.op == 0) {
+        inst.setFunc();
+        inst.regWB = true;
+        inst.memOpType = inst_t::none;
+    }
 }
 
 cpu::cycleCount cpu::exec(uint32_t inst) {
