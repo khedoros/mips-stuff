@@ -43,10 +43,24 @@ cpu::cycleCount cpu::fetchOp(inst_t& inst) {
 
 cpu::cycleCount cpu::decodeOp(inst_t& inst) {
     inst.setOp();
-    if(inst.op == 0) {
+    switch(inst.op) {
+    case 0: // reg-reg instructions
         inst.setFunc();
+        inst.setRs();
+        inst.setRd();
+        inst.setRt();
+        inst.operand1 = reg[inst.rs];
+        inst.operand2 = reg[inst.rt];
+        inst.outputReg = inst.rd;
         inst.regWB = true;
         inst.memOpType = inst_t::none;
+        break;
+    case 0xf:
+        inst.setImm16();
+        inst.setRt();
+        inst.regWB = true;
+        inst.outputReg = inst.rt;
+        break;
     }
 }
 
