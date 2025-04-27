@@ -61,13 +61,16 @@ cpu::cycleCount cpu::decodeOp(inst_t& inst) {
         inst.regWB = true;
         inst.outputReg = inst.rt;
         break;
+    default:
+        std::cerr<<"Unhandled Op\n";
+        return 0;
     }
+    return 1;
 }
 
-cpu::cycleCount cpu::exec(uint32_t inst) {
-    std::cout << ::decode(inst) << '\n';
-    auto oper = inst_t::getOp(inst);
-    switch(oper) {
+cpu::cycleCount cpu::exec(const inst_t& inst) {
+    std::cout << ::decode(inst.opcode) << '\n';
+    switch(inst.op) {
         case 0: return execAlu(inst); // ALU operations
         case 1: return execBranch(inst); // Branch operations
         case 2: // j
@@ -172,8 +175,8 @@ cpu::cycleCount cpu::exec(uint32_t inst) {
     }
 }
 
-cpu::cycleCount cpu::execAlu(uint32_t inst) {
-    switch(inst_t::getFunc(inst)) {
+cpu::cycleCount cpu::execAlu(const inst_t& inst) {
+    switch(inst.func) {
         case 0: // sll
             return 0;
         case 2: // srl
@@ -239,17 +242,17 @@ cpu::cycleCount cpu::execAlu(uint32_t inst) {
     }
 }
 
-cpu::cycleCount cpu::execBranch(uint32_t inst) {
+cpu::cycleCount cpu::execBranch(const inst_t& inst) {
     // branch type: inst_t::getRt(inst)
     // offset register: inst_t::getRs(inst)
     // 16-bit immediate: inst_t::getImm16(inst);
-    switch(inst_t::getRt(inst)) {
+    switch(inst.rt) {
         case 0x10:
             return 0;
         case 0x11:
             return 0;
         default:
-            if(inst_t::getRt(inst) & 1) { // bgezal
+            if(inst.rt & 1) { // bgezal
                 return 0;
             }
             else { // bltzal

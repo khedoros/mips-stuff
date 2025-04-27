@@ -26,14 +26,14 @@ private:
         writeback  // write result back to register
     };
     std::array<inst_t, pipelineLength> pipeline;
-    cycleCount exec(uint32_t inst);
-    cycleCount execBranch(uint32_t inst);
-    cycleCount execAlu(uint32_t inst);
+    cycleCount exec(const inst_t& inst);
+    cycleCount execBranch(const inst_t& inst);
+    cycleCount execAlu(const inst_t& inst);
     cycleCount fetchOp(inst_t& inst);
     cycleCount decodeOp(inst_t& inst);
-    cycleCount executeOp(inst_t& inst);
-    cycleCount memoryOp(inst_t& inst);
-    cycleCount writebackOp(inst_t& inst);
+    cycleCount executeOp(const inst_t& inst);
+    cycleCount memoryOp(const inst_t& inst);
+    cycleCount writebackOp(const inst_t& inst);
 
 public:
     cpu(std::unique_ptr<memmap>& memoryMap);
