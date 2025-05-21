@@ -53,18 +53,52 @@ cpu::cycleCount cpu::decodeOp(inst_t& inst) {
         inst.operand2 = reg[inst.rt];
         inst.outputReg = inst.rd;
         inst.regWB = true;
-        inst.memOpType = inst_t::none;
         break;
-    case 0xf:
+    case 1: // branch ops
+        inst.setRs();
+        inst.setRt(); // contains branch type
+        inst.setImm16();
+        inst.jump = true;
+        break;
+    case 2: case 3: // j, jal
+        inst.setTarget();
+        inst.jump = true;
+        break;
+    case 4: case 5: // beq, bne
+        inst.setRs();
+        inst.setRt();
+        inst.setImm16();
+        inst.jump = true;
+        break;
+    case 6: case 7: // blez, bgtz
+        inst.setRs();
+        inst.setImm16();
+        inst.jump = true;
+        break;
+    case 8: case 9: case 0xa: case 0xb: case 0xc: case 0xd: case 0xe: // addi, addiu, slti, sltiu, andi, ori, xori
+        inst.setImm16();
+        inst.setRt();
+        inst.setRs();
+        inst.regWB = true;
+        inst.outputReg = inst.rt;
+        break;
+    case 0xf: // lui
         inst.setImm16();
         inst.setRt();
         inst.regWB = true;
         inst.outputReg = inst.rt;
         break;
+    case 0x10: case 0x11: case 0x12: case 0x13: // cop0, cop1, cop2, cop3
+    case 0x20: case 0x21: case 0x22: case 0x23: case 0x24: case 0x25: case 0x26: // lb, lh, lwl, lw, lbu, lhu, lwr
+    case 0x28: case 0x29: case 0x2a: case 0x2b: case 0x2e: // sb, sh, swl, sw, swr
+    case 0x30: case 0x31: case 0x32: case 0x33: // lwc0, lwc1, lwc2, lwc3
+    case 0x38: case 0x39: case 0x3a: case 0x3b: // swc0, swc1, swc2, swc3
+
     default:
         std::cerr<<"Unhandled Op\n";
         return 0;
     }
+    inst.valid = true;
     return 1;
 }
 
